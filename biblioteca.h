@@ -63,6 +63,7 @@ Elista *criaElista(Registro *r);
 void inserirLista(Lista *l, Registro *r);
 void removerLista(Lista *l, Registro *r);
 void showLista(Lista *l);
+Registro *criaRegistro() ;
 
 
 Efila *criaEfila(Registro *r);
@@ -89,11 +90,11 @@ int buscar_e_removerABB(ABB *arvore, Registro *registro);
 int getValorABB(ABB *arvore);
 void imprimeInOrdemABB(EABB *raiz, int x);
 
-
-int Cadastrar_novo_paciente();
-int Consultar_paciente_cadastrado();
-int Atualizar_dados_de_paciente(Lista *l, Registro *r);
-int Remover_paciente(Lista *l, Registro *r);
+Registro *criaRegistro();
+int Cadastrar_novo_paciente(Lista *l);
+void Consultar_paciente_cadastrado(Lista *l, const char *rg);
+int Atualizar_dados_de_paciente(Lista *l, const char *rg);
+int Remover_paciente(Lista *l, const char *rg);
 
 int Mostrar_por_ano(ABB *arv);
 int Mostrar_por_mes(ABB *arv);
