@@ -174,8 +174,15 @@ int Remover_paciente(Lista *l, const char *rg){
     Elista *atual = l->inicio;
     while (atual != NULL) {
         if (strcmp(atual->dados->rg, rg) == 0) {
-            removerLista(l, atual->dados);
             printf("Paciente removido com sucesso!\n");
+            printf("Nome: %s\n", atual->dados->nome);
+            printf("Idade: %d\n", atual->dados->idade);
+            printf("RG: %s\n", atual->dados->rg);
+            printf("Data de Entrada: %02d/%02d/%04d\n\n",
+                   atual->dados->Entrada->dia,
+                   atual->dados->Entrada->mes,
+                   atual->dados->Entrada->ano);
+            removerLista(l, atual->dados);
             return 1;
         }
         atual = atual->proximo;
@@ -187,13 +194,92 @@ int Remover_paciente(Lista *l, const char *rg){
 //-------------------------------Funções de manipulação de listas--------------------------------//
 
 
+//-------------------------------Funções de manipulação de filas--------------------------------//
+
+Efila *criaEfila(Registro *r){
+    Efila *ef = (Efila *)malloc(sizeof(Efila));
+    ef->dados = r;
+    ef->proximo = NULL;
+    return ef;
+}
+Fila *criaFila(){
+    Fila *f = (Fila *)malloc(sizeof(Fila));
+    f->head = NULL;
+    f->tail = NULL;
+    f->qtde = 0;
+    return f;
+}
+
+ 
+void enqueueFila(Fila *fila, Lista *lista, const char *rg) {
+    Elista *atual = lista->inicio;
+
+    // Percorre a lista para encontrar o paciente com o RG correspondente
+    while (atual != NULL) {
+        if (strcmp(atual->dados->rg, rg) == 0) {
+            // Paciente encontrado, agora cria o nó da fila com esse paciente
+            Efila *paciente = criaEfila(atual->dados);
+
+            if (fila->head == NULL) {
+                // Se a fila está vazia, inicializa com o novo paciente
+                fila->head = paciente;
+                fila->tail = paciente;
+            } else {
+                // Caso contrário, adiciona ao final da fila
+                fila->tail->proximo = paciente;
+                fila->tail = paciente;
+            }
+            fila->qtde++;
+            printf("Paciente com RG %s enfileirado com sucesso!\n", rg);
+            return;
+        }
+        atual = atual->proximo;
+    }
+
+    // Se o paciente não for encontrado na lista
+    printf("Paciente com RG %s não encontrado na lista.\n", rg);
+}
+
+int dequeueFila(Fila *fila){
+    if(fila->head == NULL){
+        return 0;
+    }
+
+    Efila *aux = fila->head;
+
+    printf("Desenfileirando o paciente:\n");
+    printf("Nome: %s\n", aux->dados->nome);
+    printf("Idade: %d\n", aux->dados->idade);
+    printf("RG: %s\n", aux->dados->rg);
+    printf("Data de Entrada: %02d/%02d/%04d\n\n",
+           aux->dados->Entrada->dia,
+           aux->dados->Entrada->mes,
+           aux->dados->Entrada->ano);
 
 
-Efila *criaEfila(Registro *r);
-Fila *criaFila();
-void enqueueFIla(Fila *fila, Registro *r);
-int dequeueFila(Fila *fila);
-void showFila(Fila *fila);
+    fila->head = fila->head->proximo;
+    free(aux);
+    fila->qtde--;
+
+    return 1;
+}
+void showFila(Fila *fila){
+    Efila *aux = fila->head;
+    int posicao = 1;
+    while(aux != NULL){
+        printf("Paciente %d:\n", posicao++);
+        printf("Nome: %s\n", aux->dados->nome);
+        printf("Idade: %d\n", aux->dados->idade);
+        printf("RG: %s\n", aux->dados->rg);
+        printf("Data de Entrada: %02d/%02d/%04d\n\n", 
+               aux->dados->Entrada->dia, 
+               aux->dados->Entrada->mes, 
+               aux->dados->Entrada->ano);
+        aux = aux->proximo;
+    }
+}
+
+//-------------------------------Funções de manipulação de filas--------------------------------//
 
 Epilha *criaEpilha(Fila *fila, Lista *lista);
 Pilha *criaPilha();

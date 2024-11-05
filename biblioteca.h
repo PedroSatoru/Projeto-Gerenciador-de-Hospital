@@ -68,7 +68,7 @@ Registro *criaRegistro() ;
 
 Efila *criaEfila(Registro *r);
 Fila *criaFila();
-void enqueueFIla(Fila *fila, Registro *r);
+void enqueueFila(Fila *fila, Lista *lista, const char *rg);
 int dequeueFila(Fila *fila);
 void showFila(Fila *fila);
 

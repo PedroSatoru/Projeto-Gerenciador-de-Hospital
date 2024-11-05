@@ -1,7 +1,11 @@
 #include <stdio.h>
 #include "biblioteca.h"
 
+
+
+
 int main() {
+    //Somente para testes da lista//
     Lista *lista = criaLista();
     int opcao;
     char rg[10];
