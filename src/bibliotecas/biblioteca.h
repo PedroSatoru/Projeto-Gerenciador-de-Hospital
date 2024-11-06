@@ -78,23 +78,28 @@ void pushPilha(Pilha *pilha, Fila *fila, Lista *lista);
 int popPilha(Pilha *pilha);
 void showPilha(Pilha *pilha);
 
+ABB *criaABB();
 void rotacaoEsquerdaABB(ABB *arv, EABB *v);
 void rotacaoDireitaABB(ABB *arv, EABB *v);
 int maxABB(int x, int y);
 int alturaABB(EABB *x);
 int fatorBalanceamentoABB(EABB *x);
 void balanceieABB(ABB *arv, EABB *v);
-int insereABB(ABB *arv, Registro *reg);
+int insereABBIdade(ABB *arv, Registro *reg);
 int removerABB(ABB *arvore, EABB *x);
-int buscar_e_removerABB(ABB *arvore, Registro *registro);
+int buscar_e_removerABBIdade(ABB *arvore, const char *rg);
 int getValorABB(ABB *arvore);
-void imprimeInOrdemABB(EABB *raiz, int x);
+void imprimeInOrdemABB(EABB *raiz);
+void insereABBGeral(ABB *arv, Registro *reg);
+void removeABBGeral(ABB *arv, const char *rg);
 
 Registro *criaRegistro();
 int Cadastrar_novo_paciente(Lista *l);
 void Consultar_paciente_cadastrado(Lista *l, const char *rg);
 int Atualizar_dados_de_paciente(Lista *l, const char *rg);
 int Remover_paciente(Lista *l, const char *rg);
+
+void imprimeDados(Registro *reg);
 
 int Mostrar_por_ano(ABB *arv);
 int Mostrar_por_mes(ABB *arv);
