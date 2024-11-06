@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "biblioteca.h"
+#include "bibliotecas/biblioteca.h"
 
 
 
@@ -37,13 +37,13 @@ int main() {
                 printf("Digite o RG do paciente que deseja encontrar: ");
                 scanf("%s", rg);
                 getchar(); // Limpa o '\n' do buffer de entrada
-                encontrarPacienteRG(lista, rg);
+                Consultar_paciente_cadastrado(lista, rg);
                 break;
             case 4:
                 printf("Digite o RG do paciente que deseja atualizar: ");
                 scanf("%s", rg);
                 getchar(); // Limpa o '\n' do buffer de entrada
-                atualizarDadosPaciente(lista, rg);
+                Atualizar_dados_de_paciente(lista, rg);
                 break;
             case 5:
                 printf("Digite o RG do paciente que deseja apagar: ");

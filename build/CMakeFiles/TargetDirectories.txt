@@ -1,0 +1,4 @@
+/workspaces/Projeto-Gerenciador-de-Hospital/build/CMakeFiles/edit_cache.dir
+/workspaces/Projeto-Gerenciador-de-Hospital/build/CMakeFiles/meu_programa.dir
+/workspaces/Projeto-Gerenciador-de-Hospital/build/CMakeFiles/rebuild_cache.dir
+/workspaces/Projeto-Gerenciador-de-Hospital/build/CMakeFiles/bibliotecas.dir

@@ -1,0 +1,12 @@
+[
+{
+  "directory": "/workspaces/Projeto-Gerenciador-de-Hospital/build",
+  "command": "/usr/bin/cc   -g   -std=gnu11 -o CMakeFiles/meu_programa.dir/src/main.c.o   -c /workspaces/Projeto-Gerenciador-de-Hospital/src/main.c",
+  "file": "/workspaces/Projeto-Gerenciador-de-Hospital/src/main.c"
+},
+{
+  "directory": "/workspaces/Projeto-Gerenciador-de-Hospital/build",
+  "command": "/usr/bin/cc   -g   -std=gnu11 -o CMakeFiles/bibliotecas.dir/src/bibliotecas/biblioteca.c.o   -c /workspaces/Projeto-Gerenciador-de-Hospital/src/bibliotecas/biblioteca.c",
+  "file": "/workspaces/Projeto-Gerenciador-de-Hospital/src/bibliotecas/biblioteca.c"
+}
+]

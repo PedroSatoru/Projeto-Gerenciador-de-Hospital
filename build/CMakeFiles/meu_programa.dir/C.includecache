@@ -1,0 +1,16 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/workspaces/Projeto-Gerenciador-de-Hospital/src/bibliotecas/biblioteca.h
+
+/workspaces/Projeto-Gerenciador-de-Hospital/src/main.c
+stdio.h
+-
+bibliotecas/biblioteca.h
+/workspaces/Projeto-Gerenciador-de-Hospital/src/bibliotecas/biblioteca.h
+
