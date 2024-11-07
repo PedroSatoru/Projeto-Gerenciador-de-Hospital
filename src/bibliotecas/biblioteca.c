@@ -431,6 +431,124 @@ int insereABBIdade(ABB *arv, Registro *reg){
     }
     return 1;
 }
+
+int insereABBAno(ABB *arv, Registro *reg){
+    EABB *novo = malloc(sizeof(EABB));
+    novo->dir = NULL;
+    novo->esq = NULL;
+    novo->pai = NULL;
+    novo->dados = reg;
+
+    EABB *anterior = NULL;
+    EABB *atual = arv->raiz;
+
+    while (atual != NULL) {
+        anterior = atual;
+        if (reg->Entrada->ano <= atual->dados->Entrada->ano) {
+        atual = atual->esq;
+        } else {
+        atual = atual->dir;
+        }
+    }
+
+    novo->pai = anterior;
+    if (anterior != NULL) {
+        if (reg->Entrada->ano <= anterior->dados->Entrada->ano) {
+        anterior->esq = novo;
+        } else {
+        anterior->dir = novo;
+        }
+    } else {
+        arv->raiz = novo;
+    }
+    arv->qtde++;
+
+    EABB *temp = novo->pai;
+    while (temp != NULL) {
+        balanceieABB(arv, temp);
+        temp = temp->pai;
+    }
+    return 1;
+}
+
+int insereABBMes(ABB *arv, Registro *reg){
+    EABB *novo = malloc(sizeof(EABB));
+    novo->dir = NULL;
+    novo->esq = NULL;
+    novo->pai = NULL;
+    novo->dados = reg;
+
+    EABB *anterior = NULL;
+    EABB *atual = arv->raiz;
+
+    while (atual != NULL) {
+        anterior = atual;
+        if (reg->Entrada->mes <= atual->dados->Entrada->mes) {
+        atual = atual->esq;
+        } else {
+        atual = atual->dir;
+        }
+    }
+
+    novo->pai = anterior;
+    if (anterior != NULL) {
+        if (reg->Entrada->mes <= anterior->dados->Entrada->mes) {
+        anterior->esq = novo;
+        } else {
+        anterior->dir = novo;
+        }
+    } else {
+        arv->raiz = novo;
+    }
+    arv->qtde++;
+
+    EABB *temp = novo->pai;
+    while (temp != NULL) {
+        balanceieABB(arv, temp);
+        temp = temp->pai;
+    }
+    return 1;
+}
+
+int insereABBDia(ABB *arv, Registro *reg){
+    EABB *novo = malloc(sizeof(EABB));
+    novo->dir = NULL;
+    novo->esq = NULL;
+    novo->pai = NULL;
+    novo->dados = reg;
+
+    EABB *anterior = NULL;
+    EABB *atual = arv->raiz;
+
+    while (atual != NULL) {
+        anterior = atual;
+        if (reg->Entrada->dia <= atual->dados->Entrada->dia) {
+        atual = atual->esq;
+        } else {
+        atual = atual->dir;
+        }
+    }
+
+    novo->pai = anterior;
+    if (anterior != NULL) {
+        if (reg->Entrada->dia <= anterior->dados->Entrada->dia) {
+        anterior->esq = novo;
+        } else {
+        anterior->dir = novo;
+        }
+    } else {
+        arv->raiz = novo;
+    }
+    arv->qtde++;
+
+    EABB *temp = novo->pai;
+    while (temp != NULL) {
+        balanceieABB(arv, temp);
+        temp = temp->pai;
+    }
+    return 1;
+}
+
 int removerABB(ABB *arvore, EABB *x){
     int filhos = 0;
 
@@ -497,6 +615,60 @@ int buscar_e_removerABBIdade(ABB *arvore, const char *rg){
     return 0;
 }
 
+int buscar_e_removerABBAno(ABB *arvore, const char *rg){
+    EABB *anterior = arvore->raiz;
+    EABB *atual = anterior;
+    while (atual != NULL) {
+        if (strcmp(atual->dados->rg, rg) == 0)
+            return removerABB(arvore, atual);
+        else if (anterior->dados->Entrada->ano <= atual->dados->Entrada->ano){
+            anterior = atual;
+            atual = atual->esq;
+        }
+        else if (anterior->dados->Entrada->ano > atual->dados->Entrada->ano){
+            anterior = atual;
+            atual = atual->dir;
+        }
+    }
+    return 0;
+}
+
+int buscar_e_removerABBMes(ABB *arvore, const char *rg){
+    EABB *anterior = arvore->raiz;
+    EABB *atual = anterior;
+    while (atual != NULL) {
+        if (strcmp(atual->dados->rg, rg) == 0)
+            return removerABB(arvore, atual);
+        else if (anterior->dados->Entrada->mes <= atual->dados->Entrada->mes){
+            anterior = atual;
+            atual = atual->esq;
+        }
+        else if (anterior->dados->Entrada->mes > atual->dados->Entrada->mes){
+            anterior = atual;
+            atual = atual->dir;
+        }
+    }
+    return 0;
+}
+
+int buscar_e_removerABBDia(ABB *arvore, const char *rg){
+    EABB *anterior = arvore->raiz;
+    EABB *atual = anterior;
+    while (atual != NULL) {
+        if (strcmp(atual->dados->rg, rg) == 0)
+            return removerABB(arvore, atual);
+        else if (anterior->dados->Entrada->ano <= atual->dados->Entrada->ano){
+            anterior = atual;
+            atual = atual->esq;
+        }
+        else if (anterior->dados->Entrada->ano > atual->dados->Entrada->ano){
+            anterior = atual;
+            atual = atual->dir;
+        }
+    }
+    return 0;
+}
+
 void imprimeInOrdemABB(EABB *raiz){
     if (raiz != NULL) {
     imprimeInOrdemABB(raiz->esq);
@@ -505,12 +677,18 @@ void imprimeInOrdemABB(EABB *raiz){
   }
 }
 
-void insereABBGeral(ABB *arv, Registro *reg){
-    insereABBIdade(arv,reg);
+void insereABBGeral(ABB *arvi,ABB *arva,ABB *arvm,ABB *arvd, Registro *reg){
+    insereABBIdade(arvi,reg);
+    insereABBAno(arva,reg);
+    insereABBMes(arvm,reg);
+    insereABBDia(arvd,reg);
 }
 
-void removeABBGeral(ABB *arv, const char *rg){
-    buscar_e_removerABBIdade(arv, rg);
+void removeABBGeral(ABB *arvi,ABB *arva,ABB *arvm,ABB *arvd, const char *rg){
+    buscar_e_removerABBIdade(arvi, rg);
+    buscar_e_removerABBAno(arva, rg);
+    buscar_e_removerABBMes(arvm, rg);
+    buscar_e_removerABBDia(arvd, rg);
 }
 
 //-------------------------------Funções de manipulação de ABB--------------------------------//

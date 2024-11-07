@@ -8,6 +8,9 @@ int main() {
     //Somente para testes da lista//
     Lista *lista = criaLista();
     ABB *arvIdade = criaABB();
+    ABB *arvAno = criaABB();
+    ABB *arvMes = criaABB();
+    ABB *arvDia = criaABB();
     int opcao;
     char rg[10];
 
@@ -19,6 +22,9 @@ int main() {
         printf("4 - Atualizar dados do paciente\n");
         printf("5 - Remover paciente\n");
         printf("6 - Mostrar pacientes por idade\n");
+        printf("7 - Mostrar pacientes por ano\n");
+        printf("8 - Mostrar pacientes por mes\n");
+        printf("9 - Mostrar pacientes por dia\n");
         printf("0 - Sair\n");
         printf("Escolha uma opção: ");
         scanf("%d", &opcao);
@@ -28,7 +34,7 @@ int main() {
             case 1: {
                 Registro *novoRegistro = criaRegistro();
                 inserirLista(lista, novoRegistro);
-                insereABBGeral(arvIdade, novoRegistro);
+                insereABBGeral(arvIdade,arvAno,arvMes,arvDia, novoRegistro);
                 printf("Paciente cadastrado com sucesso!\n");
                 break;
             }
@@ -53,11 +59,23 @@ int main() {
                 scanf("%s", rg);
                 getchar(); // Limpa o '\n' do buffer de entrada
                 Remover_paciente(lista, rg);
-                removeABBGeral(arvIdade, rg);
+                removeABBGeral(arvIdade,arvAno,arvMes,arvDia, rg);
                 break;
             case 6:
-                printf("\nLista de Pacientes:\n");
+                printf("\nLista de Pacientes Por Idade:\n");
                 imprimeInOrdemABB(arvIdade->raiz);
+                break;
+            case 7:
+                printf("\nLista de Pacientes Por Ano:\n");
+                imprimeInOrdemABB(arvAno->raiz);
+                break;
+            case 8:
+                printf("\nLista de Pacientes Por Mes:\n");
+                imprimeInOrdemABB(arvMes->raiz);
+                break;
+            case 9:
+                printf("\nLista de Pacientes Por Dia:\n");
+                imprimeInOrdemABB(arvDia->raiz);
                 break;
             case 0:
                 printf("Saindo...\n");
