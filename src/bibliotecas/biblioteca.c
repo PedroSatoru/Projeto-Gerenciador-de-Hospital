@@ -10,7 +10,7 @@ void Mostrar_dados_devs(){
     printf("RA: 22.123.019-6\n");
     printf("Nome: Pedro Henrique Correia de Oliveira\n");
     //Corrigir o RA!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    printf("RA: 22.123.000-0\n");
+    printf("RA: 22.222.009-7\n");
     printf("4º Semestre\n");
     printf("Curso: Ciencias da Computação\n");
     printf("Disciplina: Estrutura de Dados\n");
@@ -281,15 +281,39 @@ void showFila(Fila *fila){
 
 //-------------------------------Funções de manipulação de filas--------------------------------//
 
+Epilha *criaEpilha(Fila *fila, Registro *reg){
+    Epilha *epilha = malloc(sizeof(Epilha));
+    epilha->proximo = NULL;
+    epilha->fila = fila;
+    epilha->reg = reg;
 
+    return epilha;
+}
+Pilha *criaPilha(){
+    Pilha *pilha = malloc(sizeof(Pilha));
+    pilha->topo = NULL;
+    pilha->qtde = 0;
 
-
-Epilha *criaEpilha(Fila *fila, Lista *lista);
-Pilha *criaPilha();
-void pushPilha(Pilha *pilha, Fila *fila, Lista *lista);
-int popPilha(Pilha *pilha);
-void showPilha(Pilha *pilha);
-
+    return pilha;
+}
+void pushPilha(Pilha *pilha, Fila *fila, Registro *reg){
+    Epilha *novo = criaEpilha(fila, reg);
+    novo->proximo = pilha->topo;
+    pilha->topo = novo;
+    pilha->qtde++;
+}
+Registro *popPilha(Pilha *pilha){
+    if(pilha->qtde==0){
+        printf("Stack Overflow\n");
+        return -1;
+    }
+    Registro *reg = pilha->topo->reg;
+    Epilha *temp = pilha->topo;
+    pilha->topo = pilha->topo->proximo;
+    pilha->qtde--;
+    free(temp);
+    return reg;
+}
 
 //-------------------------------Funções de manipulação de ABB--------------------------------//
 

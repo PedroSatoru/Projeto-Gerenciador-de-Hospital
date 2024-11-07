@@ -50,12 +50,12 @@ typedef struct ABB {
 typedef struct Epilha {
     struct Epilha *proximo;
     Fila *fila;
-    Lista *lista;
+    Registro *reg;
 } Epilha;
 
 typedef struct {
     Epilha *topo;
-    int qtd;
+    int qtde;
 } Pilha;
 
 Lista *criaLista();
@@ -72,10 +72,10 @@ void enqueueFila(Fila *fila, Lista *lista, const char *rg);
 int dequeueFila(Fila *fila);
 void showFila(Fila *fila);
 
-Epilha *criaEpilha(Fila *fila, Lista *lista);
+Epilha *criaEpilha(Fila *fila, Registro *reg);
 Pilha *criaPilha();
-void pushPilha(Pilha *pilha, Fila *fila, Lista *lista);
-int popPilha(Pilha *pilha);
+void pushPilha(Pilha *pilha, Fila *fila, Registro *reg);
+Registro *popPilha(Pilha *pilha);
 void showPilha(Pilha *pilha);
 
 ABB *criaABB();
