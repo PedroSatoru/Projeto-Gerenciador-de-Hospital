@@ -9,7 +9,6 @@ void Mostrar_dados_devs(){
     printf("Nome: Pedro Henrique Satoru Lima Takahashi \n");
     printf("RA: 22.123.019-6\n");
     printf("Nome: Pedro Henrique Correia de Oliveira\n");
-    //Corrigir o RA!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     printf("RA: 22.222.009-7\n");
     printf("4º Semestre\n");
     printf("Curso: Ciencias da Computação\n");
