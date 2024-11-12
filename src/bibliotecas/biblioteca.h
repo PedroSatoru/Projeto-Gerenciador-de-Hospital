@@ -100,7 +100,7 @@ void insereABBGeral(ABB *arvi,ABB *arva,ABB *arvm,ABB *arvd, Registro *reg);
 void removeABBGeral(ABB *arvi,ABB *arva,ABB *arvm,ABB *arvd, const char *rg);
 
 Registro *criaRegistro();
-int Cadastrar_novo_paciente(Lista *l);
+int Cadastrar_novo_paciente(Lista *l, Registro *novoRegistro);
 void Consultar_paciente_cadastrado(Lista *l, const char *rg);
 int Atualizar_dados_de_paciente(Lista *l, const char *rg);
 int Remover_paciente(Lista *l, const char *rg);
@@ -114,6 +114,8 @@ int Mostrar_por_idade(ABB *arv);
 
 int salvarRegistros(Lista *l);
 int carregarRegistros(Lista *l);
+int salvarDatas(Lista *l);
+int carregarDatas(Lista *l);
 
 void Mostrar_dados_devs();
 
