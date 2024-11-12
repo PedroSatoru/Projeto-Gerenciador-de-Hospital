@@ -119,4 +119,9 @@ int carregarDatas(Lista *l);
 
 void Mostrar_dados_devs();
 
+int menus(Lista *l, Fila *f, Pilha *p, ABB *arvi, ABB *arva, ABB *arvm, ABB *arvd);
+void menuLista(Lista *l, ABB *arvIdade, ABB *arvAno, ABB *arvMes, ABB *arvDia);
+void menuFila(Lista *l, Fila *f);
+void menuArvore(Lista *l, ABB *arvi, ABB *arva, ABB *arvm, ABB *arvd);
+
 #endif
