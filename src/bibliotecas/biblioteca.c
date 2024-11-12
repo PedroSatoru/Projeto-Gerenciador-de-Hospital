@@ -100,26 +100,15 @@ Registro *criaRegistro() {
     scanf("%d", &r->Entrada->mes);
     
     printf("Digite o ano da entrada: ");
-    printf("Erro 11");
     scanf("%d", &r->Entrada->ano);
     
-    printf("Erro 8");
     getchar(); 
-    printf("Erro 9");
     return r;
-    printf("Erro 10");
 }
 
 int Cadastrar_novo_paciente(Lista *l, Registro *novoRegistro){
-    printf("Erro 5");
     inserirLista(l, novoRegistro);
-    printf("Erro 4");
-    if(salvarRegistros(l)){
-        printf("Paciente Salvo");
-    } else{
-        printf("bcda");
-    }
-    printf("Paciente cadastrado com sucesso!\n");
+    salvarRegistros(l);
     return 1;
 }
 
@@ -172,6 +161,7 @@ int Atualizar_dados_de_paciente(Lista *l, const char *rg){
             scanf("%d", &atual->dados->Entrada->ano);
             getchar(); 
 
+            salvarRegistros(l);
             printf("Dados atualizados com sucesso!\n");
             return 1;
         }
@@ -194,6 +184,7 @@ int Remover_paciente(Lista *l, const char *rg){
                    atual->dados->Entrada->mes,
                    atual->dados->Entrada->ano);
             removerLista(l, atual->dados);
+            salvarRegistros(l);
             return 1;
         }
         atual = atual->proximo;
@@ -754,7 +745,7 @@ int salvarRegistros(Lista *l){
         inicio = inicio->proximo;
     }
     //Abrindo o arquivo binário no modo de escrita
-    FILE *f = fopen("arquivo.bin", "wb");
+    FILE *f = fopen("arquivo.txt", "w");
 
     //Verificando se foi possível abrir e escrever o arquivo
     if (f == NULL) {
@@ -765,10 +756,8 @@ int salvarRegistros(Lista *l){
 
     //Escrevendo a struct no arquivo
     fwrite(regs, sizeof(Registro), l->qtde, f);
-    printf("a");
     //Fechando o arquivo
     fclose(f);
-    printf("Erro 2");
     if(salvarDatas(l)){
         return 1;
     }
@@ -786,7 +775,7 @@ int salvarDatas(Lista *l){
         inicio = inicio->proximo;
     }
     //Abrindo o arquivo binário no modo de escrita
-    FILE *f = fopen("data.bin", "wb");
+    FILE *f = fopen("data.txt", "w");
 
     //Verificando se foi possível abrir e escrever o arquivo
     if (f == NULL) {
@@ -797,7 +786,6 @@ int salvarDatas(Lista *l){
 
     //Escrevendo a struct no arquivo
     fwrite(datas, sizeof(Data), l->qtde, f);
-    printf("a");
     //Fechando o arquivo
     fclose(f);
 
@@ -807,7 +795,7 @@ int salvarDatas(Lista *l){
 
 int carregarDatas(Lista *l){
     //Abrindo o arquivo binário no modo de leitura
-    FILE *f = fopen("data.bin", "rb");
+    FILE *f = fopen("data.txt", "r");
 
     //Verificando se foi possível abrir e ler o arquivo
     if (f == NULL) {
@@ -844,7 +832,7 @@ int carregarDatas(Lista *l){
 //Função para ler o arquivo binário e salvar as informações nas structs
 int carregarRegistros(Lista *l){
     //Abrindo o arquivo binário no modo de leitura
-    FILE *f = fopen("arquivo.bin", "rb");
+    FILE *f = fopen("arquivo.txt", "r");
 
     //Verificando se foi possível abrir e ler o arquivo
     if (f == NULL) {
@@ -871,7 +859,6 @@ int carregarRegistros(Lista *l){
 
     //Fechando o arquivo
     fclose(f);
-    printf("Erro 1");
     if(carregarDatas(l)){
         return 1;
     }

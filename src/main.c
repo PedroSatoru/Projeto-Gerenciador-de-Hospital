@@ -7,9 +7,7 @@
 int main() {
     //Somente para testes da lista//
     Lista *lista = criaLista();
-    if(carregarRegistros(lista)){
-        printf("Qtde de Regs: %d", lista->qtde);
-    }
+    carregarRegistros(lista);
     ABB *arvIdade = criaABB();
     ABB *arvAno = criaABB();
     ABB *arvMes = criaABB();
@@ -35,9 +33,7 @@ int main() {
 
         switch(opcao) {
             case 1: {
-                printf("Erro 6");
                 Registro *novoRegistro = criaRegistro();
-                printf("Erro 7");
                 Cadastrar_novo_paciente(lista, novoRegistro);
                 insereABBGeral(arvIdade,arvAno,arvMes,arvDia, novoRegistro);
                 printf("Paciente cadastrado com sucesso!\n");
