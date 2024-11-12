@@ -736,6 +736,9 @@ int Mostrar_por_mes(ABB *arv);
 int Mostrar_por_dia(ABB *arv);
 int Mostrar_por_idade(ABB *arv);
 
+
+//--------------------------------------Funções de manipulação de arquivos--------------------------------------//
+
 //Função para salvar as structs em um arquivo binário
 int salvarRegistros(Lista *l){
     Registro regs[l->qtde];
@@ -867,5 +870,163 @@ int carregarRegistros(Lista *l){
     }
 }
 
+//--------------------------------------Funções de manipulação de arquivos--------------------------------------//
 
 
+int menus(Lista *l, Fila *f, Pilha *p, ABB *arvi, ABB *arva, ABB *arvm, ABB *arvd) {
+    int opcao;
+    do {
+        printf("Menu Principal:\n");
+        printf("1. Lista de Pacientes\n");
+        printf("2. Fila de espera\n");
+        printf("3. Buscar por caracteristicas\n");
+        printf("0. Sair\n");
+        printf("Escolha uma opção: ");
+        scanf("%d", &opcao);
+        getchar(); // Limpar o buffer do teclado
+
+        switch (opcao) {
+            case 1:
+                menuLista(l, arvi, arva, arvm, arvd);
+                break;
+            case 2:
+                menuFila(l, f);
+                break;
+            case 3:
+                menuArvore(l, arvi, arva, arvm, arvd);
+                break;
+            case 0:
+                printf("Saindo...\n");
+                break;
+            default:
+                printf("Opção inválida! Tente novamente.\n");
+        }
+    } while (opcao != 0);
+    return 0;
+}
+
+void menuLista(Lista *l, ABB *arvIdade, ABB *arvAno, ABB *arvMes, ABB *arvDia) {
+    int opcao;
+    char rg[20];
+    do {
+        printf("\nMenu de Manipulação de Lista:\n");
+        printf("1. Cadastrar novo paciente\n");
+        printf("2. Consultar paciente cadastrado\n");
+        printf("3. Atualizar dados de paciente\n");
+        printf("4. Remover paciente\n");
+        printf("5. Mostrar lista de pacientes\n");
+        printf("0. Voltar ao menu principal\n");
+        printf("Escolha uma opção: ");
+        scanf("%d", &opcao);
+        getchar(); // Limpar o buffer do teclado
+
+        switch (opcao) {
+            case 1: {
+                Registro *novoRegistro = criaRegistro();
+                printf("\n");
+                Cadastrar_novo_paciente(l, novoRegistro);
+                insereABBGeral(arvIdade,arvAno,arvMes,arvDia, novoRegistro);
+                break;
+            }
+            case 2:
+                printf("\nDigite o RG do paciente: ");
+                scanf("%s", rg);
+                getchar(); // Limpar o buffer do teclado
+                Consultar_paciente_cadastrado(l, rg);
+                break;
+            case 3:
+                printf("\nDigite o RG do paciente: ");
+                scanf("%s", rg);
+                getchar(); // Limpar o buffer do teclado
+                Atualizar_dados_de_paciente(l, rg);
+                break;
+            case 4:
+                printf("\nDigite o RG do paciente: ");
+                scanf("%s", rg);
+                getchar(); // Limpar o buffer do teclado
+                Remover_paciente(l, rg);
+                removeABBGeral(arvIdade,arvAno,arvMes,arvDia, rg);
+                break;
+            case 5:
+                printf("\n");
+                showLista(l);
+                break;
+            case 0:
+                printf("\nVoltando ao menu principal...\n");
+                break;
+            default:
+                printf("\nOpção inválida! Tente novamente.\n");
+        }
+    } while (opcao != 0);
+}
+
+void menuFila(Lista *l, Fila *f) {
+    int opcao;
+    char rg[20];
+    do {
+        printf("\nMenu de Manipulação de Fila:\n");
+        printf("1. Enfileirar paciente\n");
+        printf("2. Desenfileirar paciente\n");
+        printf("3. Mostrar fila de pacientes\n");
+        printf("0. Voltar ao menu principal\n");
+        printf("Escolha uma opção: ");
+        scanf("%d", &opcao);
+        getchar(); // Limpar o buffer do teclado
+
+        switch (opcao) {
+            case 1:
+                printf("\nDigite o RG do paciente: ");
+                scanf("%s", rg);
+                getchar(); // Limpar o buffer do teclado
+                enqueueFila(f, l, rg);
+                break;
+            case 2:
+                printf("\n");
+                dequeueFila(f);
+                break;
+            case 3:
+                printf("\n");
+                showFila(f);
+                break;
+            case 0:
+                printf("\nVoltando ao menu principal...\n");
+                break;
+            default:
+                printf("\nOpção inválida! Tente novamente.\n");
+        }
+    } while (opcao != 0);
+}
+void menuArvore(Lista *l, ABB *arvi, ABB *arva, ABB *arvm, ABB *arvd) {
+    int opcao;
+    do {
+        printf("\nMenu de Manipulação de Árvore:\n");
+        printf("1. Mostrar pacientes por idade\n");
+        printf("2. Mostrar pacientes por ano\n");
+        printf("3. Mostrar pacientes por mês\n");
+        printf("4. Mostrar pacientes por dia\n");
+        printf("0. Voltar ao menu principal\n");
+        printf("Escolha uma opção: ");
+        scanf("%d", &opcao);
+        getchar(); // Limpar o buffer do teclado
+
+        switch (opcao) {
+            case 1:
+                imprimeInOrdemABB(arvi->raiz);
+                break;
+            case 2:
+                imprimeInOrdemABB(arva->raiz);
+                break;
+            case 3:
+                imprimeInOrdemABB(arvm->raiz);
+                break;
+            case 4:
+                imprimeInOrdemABB(arvd->raiz);
+                break;
+            case 0:
+                printf("Voltando ao menu principal...\n");
+                break;
+            default:
+                printf("Opção inválida! Tente novamente.\n");
+        }
+    } while (opcao != 0);
+}
