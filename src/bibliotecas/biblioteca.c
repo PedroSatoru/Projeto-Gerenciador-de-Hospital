@@ -9,6 +9,7 @@ void Mostrar_dados_devs(){
     printf("Nome: Pedro Henrique Satoru Lima Takahashi \n");
     printf("RA: 22.123.019-6\n");
     printf("Nome: Pedro Henrique Correia de Oliveira\n");
+    
     printf("RA: 22.222.009-7\n");
     printf("4º Semestre\n");
     printf("Curso: Ciencias da Computação\n");
@@ -99,15 +100,25 @@ Registro *criaRegistro() {
     scanf("%d", &r->Entrada->mes);
     
     printf("Digite o ano da entrada: ");
+    printf("Erro 11");
     scanf("%d", &r->Entrada->ano);
     
+    printf("Erro 8");
     getchar(); 
+    printf("Erro 9");
     return r;
+    printf("Erro 10");
 }
 
-int Cadastrar_novo_paciente(Lista *l){
-    Registro *novoRegistro = criaRegistro();
+int Cadastrar_novo_paciente(Lista *l, Registro *novoRegistro){
+    printf("Erro 5");
     inserirLista(l, novoRegistro);
+    printf("Erro 4");
+    if(salvarRegistros(l)){
+        printf("Paciente Salvo");
+    } else{
+        printf("bcda");
+    }
     printf("Paciente cadastrado com sucesso!\n");
     return 1;
 }
@@ -124,7 +135,7 @@ void Consultar_paciente_cadastrado(Lista *l, const char *rg){
                    atual->dados->Entrada->dia, 
                    atual->dados->Entrada->mes, 
                    atual->dados->Entrada->ano);
-            return 0;
+            return;
         }
         atual = atual->proximo;
     }
@@ -162,12 +173,13 @@ int Atualizar_dados_de_paciente(Lista *l, const char *rg){
             getchar(); 
 
             printf("Dados atualizados com sucesso!\n");
-            return;
+            return 1;
         }
         atual = atual->proximo;
     }
 
     printf("Paciente com RG %s não encontrado.\n", rg);
+    return 0;
 }
 int Remover_paciente(Lista *l, const char *rg){
     Elista *atual = l->inicio;
@@ -301,12 +313,13 @@ void pushPilha(Pilha *pilha, Fila *fila, Registro *reg){
     pilha->topo = novo;
     pilha->qtde++;
 }
+
 Registro *popPilha(Pilha *pilha){
+    Registro *reg = pilha->topo->reg;
     if(pilha->qtde==0){
         printf("Stack Overflow\n");
-        return -1;
+        return reg;
     }
-    Registro *reg = pilha->topo->reg;
     Epilha *temp = pilha->topo;
     pilha->topo = pilha->topo->proximo;
     pilha->qtde--;
@@ -732,8 +745,140 @@ int Mostrar_por_mes(ABB *arv);
 int Mostrar_por_dia(ABB *arv);
 int Mostrar_por_idade(ABB *arv);
 
-int salvarRegistros(Lista *l);
-int carregarRegistros(Lista *l);
+//Função para salvar as structs em um arquivo binário
+int salvarRegistros(Lista *l){
+    Registro regs[l->qtde];
+    Elista *inicio = l->inicio;
+    for(int i=0; i<l->qtde; i++){
+        regs[i] = *inicio->dados;
+        inicio = inicio->proximo;
+    }
+    //Abrindo o arquivo binário no modo de escrita
+    FILE *f = fopen("arquivo.bin", "wb");
+
+    //Verificando se foi possível abrir e escrever o arquivo
+    if (f == NULL) {
+        printf("Erro ao escrever o arquivo.\n");
+        //Caso não seja possível abrir ou escrever o arquivo, retorna 1 encerrando a função
+        return 0;
+    }
+
+    //Escrevendo a struct no arquivo
+    fwrite(regs, sizeof(Registro), l->qtde, f);
+    printf("a");
+    //Fechando o arquivo
+    fclose(f);
+    printf("Erro 2");
+    if(salvarDatas(l)){
+        return 1;
+    }
+    else{
+        return 0;
+    }
+}
+
+int salvarDatas(Lista *l){
+
+    Data datas[l->qtde];
+    Elista *inicio = l->inicio;
+    for(int i=0; i<l->qtde; i++){
+        datas[i] = *inicio->dados->Entrada;
+        inicio = inicio->proximo;
+    }
+    //Abrindo o arquivo binário no modo de escrita
+    FILE *f = fopen("data.bin", "wb");
+
+    //Verificando se foi possível abrir e escrever o arquivo
+    if (f == NULL) {
+        printf("Erro ao escrever o arquivo datas.\n");
+        //Caso não seja possível abrir ou escrever o arquivo, retorna 1 encerrando a função
+        return 0;
+    }
+
+    //Escrevendo a struct no arquivo
+    fwrite(datas, sizeof(Data), l->qtde, f);
+    printf("a");
+    //Fechando o arquivo
+    fclose(f);
+
+
+    return 1;
+};
+
+int carregarDatas(Lista *l){
+    //Abrindo o arquivo binário no modo de leitura
+    FILE *f = fopen("data.bin", "rb");
+
+    //Verificando se foi possível abrir e ler o arquivo
+    if (f == NULL) {
+        //Caso não seja possível abrir ou ler o arquivo, retorna 1 encerrando a função
+        printf("Erro ao ler o arquivo data.\n");
+        return 0;
+    }
+
+    //Variável para descobrir o número de clientes ja cadastrados presentes no arquivo
+    int i = 0;
+    Data datas[100];
+    //Armazenando todas os clientes do arquivo em structs Cliente dentro da struct ListaDeClientes
+    while (fread(&datas[i], sizeof(Data), 1, f) == 1) {
+        //Iterando a quantidade de clientes
+        i++;
+    }
+
+    Elista *inicio = l->inicio;
+    int j = 0;
+    while(inicio != NULL){
+        inicio->dados->Entrada = &datas[j];
+        inicio = inicio->proximo;
+        j++;
+    }
+
+    //Armazenando o número de clientes
+    l->qtde = i;
+
+    //Fechando o arquivo
+    fclose(f);
+    return 1;
+}
+
+//Função para ler o arquivo binário e salvar as informações nas structs
+int carregarRegistros(Lista *l){
+    //Abrindo o arquivo binário no modo de leitura
+    FILE *f = fopen("arquivo.bin", "rb");
+
+    //Verificando se foi possível abrir e ler o arquivo
+    if (f == NULL) {
+        //Caso não seja possível abrir ou ler o arquivo, retorna 1 encerrando a função
+        printf("Erro ao ler o arquivo.\n");
+        return 0;
+    }
+
+    //Variável para descobrir o número de clientes ja cadastrados presentes no arquivo
+    int i = 0;
+    Registro regs[100];
+    //Armazenando todas os clientes do arquivo em structs Cliente dentro da struct ListaDeClientes
+    while (fread(&regs[i], sizeof(Registro), 1, f) == 1) {
+        //Iterando a quantidade de clientes
+        i++;
+    }
+
+    for(int j=0; j<i; j++){
+        inserirLista(l, &regs[j]);
+    }
+
+    //Armazenando o número de clientes
+    l->qtde = i;
+
+    //Fechando o arquivo
+    fclose(f);
+    printf("Erro 1");
+    if(carregarDatas(l)){
+        return 1;
+    }
+    else{
+        return 0;
+    }
+}
 
 
 
