@@ -9,11 +9,11 @@ int main() {
     Lista *lista = criaLista();
     Fila *fila = criaFila();
     Pilha *pilha = criaPilha();
-    carregarRegistros(lista);
     ABB *arvIdade = criaABB();
     ABB *arvAno = criaABB();
     ABB *arvMes = criaABB();
     ABB *arvDia = criaABB();
+    carregarRegistros(lista, arvIdade,arvAno,arvMes,arvDia);
 
 
     menus(lista, fila, pilha, arvIdade, arvAno, arvMes, arvDia);

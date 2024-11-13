@@ -131,7 +131,7 @@ void Consultar_paciente_cadastrado(Lista *l, const char *rg){
     printf("Paciente não encontrado!\n");
     
 }
-int Atualizar_dados_de_paciente(Lista *l, const char *rg){
+int Atualizar_dados_de_paciente(Lista *l, const char *rg, ABB *arvi, ABB *arva, ABB* arvm, ABB *arvd){
     Elista *atual = l->inicio;
 
     // Percorre a lista para encontrar o paciente com o RG correspondente
@@ -162,6 +162,8 @@ int Atualizar_dados_de_paciente(Lista *l, const char *rg){
             getchar(); 
 
             salvarRegistros(l);
+            removeABBGeral(arvi, arva, arvm, arvd, rg);
+            insereABBGeral(arvi, arva, arvm, arvd, atual->dados);
             printf("Dados atualizados com sucesso!\n");
             return 1;
         }
@@ -213,7 +215,7 @@ Fila *criaFila(){
 }
 
  
-void enqueueFila(Fila *fila, Lista *lista, const char *rg) {
+void enqueueFila(Fila *fila, Lista *lista, const char *rg, Pilha *pilha) {
     Elista *atual = lista->inicio;
 
     // Percorre a lista para encontrar o paciente com o RG correspondente
@@ -232,6 +234,7 @@ void enqueueFila(Fila *fila, Lista *lista, const char *rg) {
                 fila->tail = paciente;
             }
             fila->qtde++;
+            pushPilha(pilha, 1, paciente->dados);
             printf("Paciente com RG %s enfileirado com sucesso!\n", rg);
             return;
         }
@@ -242,7 +245,7 @@ void enqueueFila(Fila *fila, Lista *lista, const char *rg) {
     printf("Paciente com RG %s não encontrado na lista.\n", rg);
 }
 
-int dequeueFila(Fila *fila){
+int dequeueFila(Fila *fila, Pilha *pilha){
     if(fila->head == NULL){
         return 0;
     }
@@ -260,6 +263,7 @@ int dequeueFila(Fila *fila){
 
 
     fila->head = fila->head->proximo;
+    pushPilha(pilha, 2, aux->dados);
     free(aux);
     fila->qtde--;
 
@@ -281,12 +285,58 @@ void showFila(Fila *fila){
     }
 }
 
-//-------------------------------Funções de manipulação de filas--------------------------------//
+void desfazer(Pilha *pilha, Fila *fila){
+    char opcao;
+    if(pilha->topo->op == 1){
+        printf("Deseja desfazer a insercao de %s na fila? (s/n): ", pilha->topo->reg->nome);
+        scanf("%c", &opcao);
+        getchar();
+        if(opcao == 's'){
+            Efila *aux = fila->head;
+            if(aux == fila->tail){
+                fila->head = NULL;
+                fila->tail = NULL;
+            } else {
+                Efila *ant = NULL;
+                while(aux->proximo != NULL){
+                    ant = aux;
+                    aux = aux->proximo;
+                }
+                fila->tail = ant;
+                ant->proximo = NULL;
+            }
+            free(aux);
+            popPilha(pilha);
+            fila->qtde--;
+            printf("Paciente removido da fila!\n\n");
+             
+        } else {
+            printf("Operacao cancelada!\n\n");
+        }
+    } else if(pilha->topo->op == 2){
+        char opcao;
+        printf("Deseja desfazer a remocao de %s na fila? (s/n): ", pilha->topo->reg->nome);
+        scanf("%c", &opcao);
+        getchar();
+        if(opcao == 's'){
+            Efila *aux = criaEfila(pilha->topo->reg);
+            aux->proximo = fila->head;
+            fila->head = aux;
+            fila->qtde++;
+            popPilha(pilha);
+            printf("Paciente reinserido na fila!\n\n");
+        } else{
+            printf("Operacao cancelada!\n\n");
+        }
+    }
+}
 
-Epilha *criaEpilha(Fila *fila, Registro *reg){
+//-------------------------------Funções de manipulação de pilhass--------------------------------//
+
+Epilha *criaEpilha(int op, Registro *reg){
     Epilha *epilha = malloc(sizeof(Epilha));
     epilha->proximo = NULL;
-    epilha->fila = fila;
+    epilha->op = op;
     epilha->reg = reg;
 
     return epilha;
@@ -298,13 +348,12 @@ Pilha *criaPilha(){
 
     return pilha;
 }
-void pushPilha(Pilha *pilha, Fila *fila, Registro *reg){
-    Epilha *novo = criaEpilha(fila, reg);
+void pushPilha(Pilha *pilha, int op, Registro *reg){
+    Epilha *novo = criaEpilha(op, reg);
     novo->proximo = pilha->topo;
     pilha->topo = novo;
     pilha->qtde++;
 }
-
 Registro *popPilha(Pilha *pilha){
     Registro *reg = pilha->topo->reg;
     if(pilha->qtde==0){
@@ -684,11 +733,11 @@ int buscar_e_removerABBDia(ABB *arvore, const char *rg){
     while (atual != NULL) {
         if (strcmp(atual->dados->rg, rg) == 0)
             return removerABB(arvore, atual);
-        else if (anterior->dados->Entrada->ano <= atual->dados->Entrada->ano){
+        else if (anterior->dados->Entrada->dia <= atual->dados->Entrada->dia){
             anterior = atual;
             atual = atual->esq;
         }
-        else if (anterior->dados->Entrada->ano > atual->dados->Entrada->ano){
+        else if (anterior->dados->Entrada->dia > atual->dados->Entrada->dia){
             anterior = atual;
             atual = atual->dir;
         }
@@ -796,7 +845,7 @@ int salvarDatas(Lista *l){
     return 1;
 };
 
-int carregarDatas(Lista *l){
+int carregarDatas(Lista *l, ABB* arvIdade,ABB* arvAno,ABB* arvMes,ABB* arvDia){
     //Abrindo o arquivo binário no modo de leitura
     FILE *f = fopen("data.txt", "r");
 
@@ -820,6 +869,7 @@ int carregarDatas(Lista *l){
     int j = 0;
     while(inicio != NULL){
         inicio->dados->Entrada = &datas[j];
+        insereABBGeral(arvIdade,arvAno,arvMes,arvDia, inicio->dados);
         inicio = inicio->proximo;
         j++;
     }
@@ -833,7 +883,7 @@ int carregarDatas(Lista *l){
 }
 
 //Função para ler o arquivo binário e salvar as informações nas structs
-int carregarRegistros(Lista *l){
+int carregarRegistros(Lista *l, ABB* arvIdade,ABB* arvAno,ABB* arvMes,ABB* arvDia){
     //Abrindo o arquivo binário no modo de leitura
     FILE *f = fopen("arquivo.txt", "r");
 
@@ -862,7 +912,7 @@ int carregarRegistros(Lista *l){
 
     //Fechando o arquivo
     fclose(f);
-    if(carregarDatas(l)){
+    if(carregarDatas(l, arvIdade, arvAno, arvMes, arvDia)){
         return 1;
     }
     else{
@@ -890,7 +940,7 @@ int menus(Lista *l, Fila *f, Pilha *p, ABB *arvi, ABB *arva, ABB *arvm, ABB *arv
                 menuLista(l, arvi, arva, arvm, arvd);
                 break;
             case 2:
-                menuFila(l, f);
+                menuFila(l, f, p);
                 break;
             case 3:
                 menuArvore(l, arvi, arva, arvm, arvd);
@@ -938,7 +988,7 @@ void menuLista(Lista *l, ABB *arvIdade, ABB *arvAno, ABB *arvMes, ABB *arvDia) {
                 printf("\nDigite o RG do paciente: ");
                 scanf("%s", rg);
                 getchar(); // Limpar o buffer do teclado
-                Atualizar_dados_de_paciente(l, rg);
+                Atualizar_dados_de_paciente(l, rg, arvIdade,arvAno,arvMes,arvDia);
                 break;
             case 4:
                 printf("\nDigite o RG do paciente: ");
@@ -960,7 +1010,7 @@ void menuLista(Lista *l, ABB *arvIdade, ABB *arvAno, ABB *arvMes, ABB *arvDia) {
     } while (opcao != 0);
 }
 
-void menuFila(Lista *l, Fila *f) {
+void menuFila(Lista *l, Fila *f, Pilha *pilha) {
     int opcao;
     char rg[20];
     do {
@@ -968,6 +1018,7 @@ void menuFila(Lista *l, Fila *f) {
         printf("1. Enfileirar paciente\n");
         printf("2. Desenfileirar paciente\n");
         printf("3. Mostrar fila de pacientes\n");
+        printf("4. Desfazer ultima operacao\n");
         printf("0. Voltar ao menu principal\n");
         printf("Escolha uma opção: ");
         scanf("%d", &opcao);
@@ -978,15 +1029,19 @@ void menuFila(Lista *l, Fila *f) {
                 printf("\nDigite o RG do paciente: ");
                 scanf("%s", rg);
                 getchar(); // Limpar o buffer do teclado
-                enqueueFila(f, l, rg);
+                enqueueFila(f, l, rg, pilha);
                 break;
             case 2:
                 printf("\n");
-                dequeueFila(f);
+                dequeueFila(f, pilha);
                 break;
             case 3:
                 printf("\n");
                 showFila(f);
+                break;
+            case 4:
+                printf("\n");
+                desfazer(pilha,f);
                 break;
             case 0:
                 printf("\nVoltando ao menu principal...\n");

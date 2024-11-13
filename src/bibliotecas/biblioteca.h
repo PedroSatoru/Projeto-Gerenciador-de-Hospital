@@ -49,7 +49,7 @@ typedef struct ABB {
 
 typedef struct Epilha {
     struct Epilha *proximo;
-    Fila *fila;
+    int op;
     Registro *reg;
 } Epilha;
 
@@ -68,13 +68,13 @@ Registro *criaRegistro() ;
 
 Efila *criaEfila(Registro *r);
 Fila *criaFila();
-void enqueueFila(Fila *fila, Lista *lista, const char *rg);
-int dequeueFila(Fila *fila);
+void enqueueFila(Fila *fila, Lista *lista, const char *rg, Pilha *pilha);
+int dequeueFila(Fila *fila, Pilha *pilha);
 void showFila(Fila *fila);
 
-Epilha *criaEpilha(Fila *fila, Registro *reg);
+Epilha *criaEpilha(int op, Registro *reg);
 Pilha *criaPilha();
-void pushPilha(Pilha *pilha, Fila *fila, Registro *reg);
+void pushPilha(Pilha *pilha, int op, Registro *reg);
 Registro *popPilha(Pilha *pilha);
 void showPilha(Pilha *pilha);
 
@@ -102,7 +102,7 @@ void removeABBGeral(ABB *arvi,ABB *arva,ABB *arvm,ABB *arvd, const char *rg);
 Registro *criaRegistro();
 int Cadastrar_novo_paciente(Lista *l, Registro *novoRegistro);
 void Consultar_paciente_cadastrado(Lista *l, const char *rg);
-int Atualizar_dados_de_paciente(Lista *l, const char *rg);
+int Atualizar_dados_de_paciente(Lista *l, const char *rg, ABB *arvi, ABB *arva, ABB* arvm, ABB *arvd);
 int Remover_paciente(Lista *l, const char *rg);
 
 void imprimeDados(Registro *reg);
@@ -113,15 +113,18 @@ int Mostrar_por_dia(ABB *arv);
 int Mostrar_por_idade(ABB *arv);
 
 int salvarRegistros(Lista *l);
-int carregarRegistros(Lista *l);
+int carregarRegistros(Lista *l, ABB*  arvIdade,ABB* arvAno,ABB* arvMes,ABB* arvDia);
 int salvarDatas(Lista *l);
-int carregarDatas(Lista *l);
+int carregarDatas(Lista *l, ABB*  arvIdade,ABB* arvAno,ABB* arvMes,ABB* arvDia);
+
 
 void Mostrar_dados_devs();
 
 int menus(Lista *l, Fila *f, Pilha *p, ABB *arvi, ABB *arva, ABB *arvm, ABB *arvd);
 void menuLista(Lista *l, ABB *arvIdade, ABB *arvAno, ABB *arvMes, ABB *arvDia);
-void menuFila(Lista *l, Fila *f);
+void menuFila(Lista *l, Fila *f, Pilha *p);
 void menuArvore(Lista *l, ABB *arvi, ABB *arva, ABB *arvm, ABB *arvd);
+
+void desfazer(Pilha *pilha, Fila *fila);
 
 #endif
