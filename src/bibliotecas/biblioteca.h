@@ -90,20 +90,20 @@ int insereABBAno(ABB *arv, Registro *reg);
 int insereABBMes(ABB *arv, Registro *reg);
 int insereABBDia(ABB *arv, Registro *reg);
 int removerABB(ABB *arvore, EABB *x);
-int buscar_e_removerABBIdade(ABB *arvore, const char *rg);
-int buscar_e_removerABBAno(ABB *arvore, const char *rg);
-int buscar_e_removerABBMes(ABB *arvore, const char *rg);
-int buscar_e_removerABBDia(ABB *arvore, const char *rg);
+int buscar_e_removerABBIdade(ABB *arvore, Registro *reg);
+int buscar_e_removerABBAno(ABB *arvore, Registro *reg);
+int buscar_e_removerABBMes(ABB *arvore, Registro *reg);
+int buscar_e_removerABBDia(ABB *arvore, Registro *reg);
 int getValorABB(ABB *arvore);
 void imprimeInOrdemABB(EABB *raiz);
 void insereABBGeral(ABB *arvi,ABB *arva,ABB *arvm,ABB *arvd, Registro *reg);
-void removeABBGeral(ABB *arvi,ABB *arva,ABB *arvm,ABB *arvd, const char *rg);
+void removeABBGeral(ABB *arvi,ABB *arva,ABB *arvm,ABB *arvd, Registro *reg);
 
 Registro *criaRegistro();
 int Cadastrar_novo_paciente(Lista *l, Registro *novoRegistro);
 void Consultar_paciente_cadastrado(Lista *l, const char *rg);
 int Atualizar_dados_de_paciente(Lista *l, const char *rg, ABB *arvi, ABB *arva, ABB* arvm, ABB *arvd);
-int Remover_paciente(Lista *l, const char *rg);
+int Remover_paciente(Lista *l, const char *rg, ABB *arvi, ABB *arva, ABB* arvm, ABB *arvd);
 
 void imprimeDados(Registro *reg);
 

@@ -44,6 +44,7 @@ void inserirLista(Lista *l, Registro *r){
     l->qtde++;
 }
 void removerLista(Lista *l, Registro *r){
+    imprimeDados(r);
     if (l->inicio == NULL) return; 
     
     Elista *atual = l->inicio;
@@ -162,7 +163,7 @@ int Atualizar_dados_de_paciente(Lista *l, const char *rg, ABB *arvi, ABB *arva, 
             getchar(); 
 
             salvarRegistros(l);
-            removeABBGeral(arvi, arva, arvm, arvd, rg);
+            removeABBGeral(arvi, arva, arvm, arvd, atual->dados);
             insereABBGeral(arvi, arva, arvm, arvd, atual->dados);
             printf("Dados atualizados com sucesso!\n");
             return 1;
@@ -173,7 +174,7 @@ int Atualizar_dados_de_paciente(Lista *l, const char *rg, ABB *arvi, ABB *arva, 
     printf("Paciente com RG %s não encontrado.\n", rg);
     return 0;
 }
-int Remover_paciente(Lista *l, const char *rg){
+int Remover_paciente(Lista *l, const char *rg, ABB *arvi, ABB *arva, ABB* arvm, ABB *arvd){
     Elista *atual = l->inicio;
     while (atual != NULL) {
         if (strcmp(atual->dados->rg, rg) == 0) {
@@ -185,7 +186,10 @@ int Remover_paciente(Lista *l, const char *rg){
                    atual->dados->Entrada->dia,
                    atual->dados->Entrada->mes,
                    atual->dados->Entrada->ano);
+            printf("3");
+            removeABBGeral(arvi, arva, arvm, arvd, atual->dados);
             removerLista(l, atual->dados);
+            printf("2");
             salvarRegistros(l);
             return 1;
         }
@@ -673,72 +677,62 @@ int removerABB(ABB *arvore, EABB *x){
 
     return 1;
 }
-int buscar_e_removerABBIdade(ABB *arvore, const char *rg){
-    EABB *anterior = arvore->raiz;
-    EABB *atual = anterior;
+int buscar_e_removerABBIdade(ABB *arvore, Registro *reg){
+    EABB *atual = arvore->raiz;
     while (atual != NULL) {
-        if (strcmp(atual->dados->rg, rg) == 0)
+        if (strcmp(atual->dados->rg, reg->rg) == 0)
             return removerABB(arvore, atual);
-        else if (anterior->dados->idade <= atual->dados->idade){
-            anterior = atual;
+        else if (reg->idade <= atual->dados->idade){
             atual = atual->esq;
         }
-        else if (anterior->dados->idade > atual->dados->idade){
-            anterior = atual;
+        else if (reg->idade > atual->dados->idade){
             atual = atual->dir;
         }
     }
     return 0;
 }
 
-int buscar_e_removerABBAno(ABB *arvore, const char *rg){
-    EABB *anterior = arvore->raiz;
-    EABB *atual = anterior;
+int buscar_e_removerABBAno(ABB *arvore, Registro *reg){
+    EABB *atual = arvore->raiz;
     while (atual != NULL) {
-        if (strcmp(atual->dados->rg, rg) == 0)
+        if (strcmp(atual->dados->rg, reg->rg) == 0)
             return removerABB(arvore, atual);
-        else if (anterior->dados->Entrada->ano <= atual->dados->Entrada->ano){
-            anterior = atual;
+        else if (reg->Entrada->ano <= atual->dados->Entrada->ano){
             atual = atual->esq;
         }
-        else if (anterior->dados->Entrada->ano > atual->dados->Entrada->ano){
-            anterior = atual;
+        else if (reg->Entrada->ano > atual->dados->Entrada->ano){
             atual = atual->dir;
         }
     }
     return 0;
 }
 
-int buscar_e_removerABBMes(ABB *arvore, const char *rg){
-    EABB *anterior = arvore->raiz;
-    EABB *atual = anterior;
+int buscar_e_removerABBMes(ABB *arvore, Registro *reg){
+    EABB *atual = arvore->raiz;
     while (atual != NULL) {
-        if (strcmp(atual->dados->rg, rg) == 0)
+        if (strcmp(atual->dados->rg, reg->rg) == 0)
             return removerABB(arvore, atual);
-        else if (anterior->dados->Entrada->mes <= atual->dados->Entrada->mes){
-            anterior = atual;
+        else if (reg->Entrada->mes <= atual->dados->Entrada->mes){
             atual = atual->esq;
         }
-        else if (anterior->dados->Entrada->mes > atual->dados->Entrada->mes){
-            anterior = atual;
+        else if (reg->Entrada->mes > atual->dados->Entrada->mes){
             atual = atual->dir;
         }
     }
     return 0;
 }
 
-int buscar_e_removerABBDia(ABB *arvore, const char *rg){
-    EABB *anterior = arvore->raiz;
-    EABB *atual = anterior;
+int buscar_e_removerABBDia(ABB *arvore, Registro *reg){
+    EABB *atual = arvore->raiz;
+    imprimeDados(reg);
     while (atual != NULL) {
-        if (strcmp(atual->dados->rg, rg) == 0)
+        if (strcmp(atual->dados->rg, reg->rg) == 0){
             return removerABB(arvore, atual);
-        else if (anterior->dados->Entrada->dia <= atual->dados->Entrada->dia){
-            anterior = atual;
+        }
+        else if (reg->Entrada->dia <= atual->dados->Entrada->dia){
             atual = atual->esq;
         }
-        else if (anterior->dados->Entrada->dia > atual->dados->Entrada->dia){
-            anterior = atual;
+        else if (reg->Entrada->dia > atual->dados->Entrada->dia){
             atual = atual->dir;
         }
     }
@@ -760,11 +754,12 @@ void insereABBGeral(ABB *arvi,ABB *arva,ABB *arvm,ABB *arvd, Registro *reg){
     insereABBDia(arvd,reg);
 }
 
-void removeABBGeral(ABB *arvi,ABB *arva,ABB *arvm,ABB *arvd, const char *rg){
-    buscar_e_removerABBIdade(arvi, rg);
-    buscar_e_removerABBAno(arva, rg);
-    buscar_e_removerABBMes(arvm, rg);
-    buscar_e_removerABBDia(arvd, rg);
+void removeABBGeral(ABB *arvi,ABB *arva,ABB *arvm,ABB *arvd, Registro *reg){
+    printf("1");
+    buscar_e_removerABBIdade(arvi, reg);
+    buscar_e_removerABBAno(arva, reg);
+    buscar_e_removerABBMes(arvm, reg);
+    buscar_e_removerABBDia(arvd, reg);
 }
 
 //-------------------------------Funções de manipulação de ABB--------------------------------//
@@ -994,8 +989,7 @@ void menuLista(Lista *l, ABB *arvIdade, ABB *arvAno, ABB *arvMes, ABB *arvDia) {
                 printf("\nDigite o RG do paciente: ");
                 scanf("%s", rg);
                 getchar(); // Limpar o buffer do teclado
-                Remover_paciente(l, rg);
-                removeABBGeral(arvIdade,arvAno,arvMes,arvDia, rg);
+                Remover_paciente(l, rg, arvIdade,arvAno,arvMes,arvDia);
                 break;
             case 5:
                 printf("\n");
