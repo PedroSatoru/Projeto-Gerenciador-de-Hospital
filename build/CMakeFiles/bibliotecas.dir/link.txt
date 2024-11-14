@@ -1,0 +1,2 @@
+/usr/bin/ar qc libbibliotecas.a  CMakeFiles/bibliotecas.dir/src/bibliotecas/biblioteca.c.o
+/usr/bin/ranlib libbibliotecas.a

@@ -1,0 +1,1 @@
+/usr/bin/cc -g   CMakeFiles/meu_programa.dir/src/main.c.o  -o meu_programa  libbibliotecas.a 

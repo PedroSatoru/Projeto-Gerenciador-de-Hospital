@@ -1,0 +1,68 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.10"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "MeuProjeto",
+					"targetIndexes" : 
+					[
+						0,
+						1
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "bibliotecas::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-bibliotecas-Debug-c019ac8a33b178697d94.json",
+					"name" : "bibliotecas",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "meu_programa::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-meu_programa-Debug-dedc23d24ba089894f46.json",
+					"name" : "meu_programa",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/workspaces/Projeto-Gerenciador-de-Hospital/build",
+		"source" : "/workspaces/Projeto-Gerenciador-de-Hospital"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 0
+	}
+}
