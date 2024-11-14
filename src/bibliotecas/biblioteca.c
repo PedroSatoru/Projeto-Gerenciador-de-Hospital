@@ -4,6 +4,8 @@
 #include <string.h>
 
 //-------------------------------Desenvolvedores--------------------------------//
+
+// Função para mostrar os dados dos desenvolvedores
 void Mostrar_dados_devs(){
     printf("Desenvolvedores:\n");
     printf("Nome: Pedro Henrique Satoru Lima Takahashi \n");
@@ -16,20 +18,29 @@ void Mostrar_dados_devs(){
     printf("Disciplina: Estrutura de Dados\n");
     printf("Data de entrega: 14/11/2024");
 }
+//-------------------------------Desenvolvedores--------------------------------//
+
+
 
 //-------------------------------Funções de manipulação de listas--------------------------------//
+
+// Função para criar uma lista
 Lista *criaLista(){
     Lista *l = (Lista *)malloc(sizeof(Lista));
     l->qtde = 0;
     l->inicio = NULL;
     return l;
 }
+
+// Função para criar um elemento de lista
 Elista *criaElista(Registro *r){
     Elista *el = (Elista *)malloc(sizeof(Elista));
     el->dados = r;
     el->proximo = NULL;
     return el;
 }
+
+// Função para inserir um elemento na lista
 void inserirLista(Lista *l, Registro *r){
     Elista *paciente = criaElista(r);
     if(l->inicio == NULL){
@@ -43,8 +54,9 @@ void inserirLista(Lista *l, Registro *r){
     }
     l->qtde++;
 }
+
+// Função para remover um elemento da lista
 void removerLista(Lista *l, Registro *r){
-    imprimeDados(r);
     if (l->inicio == NULL) return; 
     
     Elista *atual = l->inicio;
@@ -66,6 +78,8 @@ void removerLista(Lista *l, Registro *r){
     free(atual);
     l->qtde--;
 }
+
+// Função para mostrar todos os elementos da lista
 void showLista(Lista *l){
      Elista *atual = l->inicio;
     while (atual != NULL) {
@@ -80,6 +94,7 @@ void showLista(Lista *l){
     }
 }
 
+// Função para criar um novo registro
 Registro *criaRegistro() {
     Registro *r = (Registro *)malloc(sizeof(Registro));
     r->Entrada = (Data *)malloc(sizeof(Data));
@@ -107,13 +122,14 @@ Registro *criaRegistro() {
     return r;
 }
 
+// Função para cadastrar um novo paciente usando um registro e salva-lo no txt
 int Cadastrar_novo_paciente(Lista *l, Registro *novoRegistro){
     inserirLista(l, novoRegistro);
     salvarRegistros(l);
     return 1;
 }
 
-
+// Função para consultar um paciente cadastrado na lista 
 void Consultar_paciente_cadastrado(Lista *l, const char *rg){
     Elista *atual = l->inicio;
     while (atual != NULL) {
@@ -130,8 +146,9 @@ void Consultar_paciente_cadastrado(Lista *l, const char *rg){
         atual = atual->proximo;
     }
     printf("Paciente não encontrado!\n");
-    
 }
+
+// Função para atualizar os dados de um paciente e atualiza no txt
 int Atualizar_dados_de_paciente(Lista *l, const char *rg, ABB *arvi, ABB *arva, ABB* arvm, ABB *arvd){
     Elista *atual = l->inicio;
 
@@ -174,6 +191,8 @@ int Atualizar_dados_de_paciente(Lista *l, const char *rg, ABB *arvi, ABB *arva, 
     printf("Paciente com RG %s não encontrado.\n", rg);
     return 0;
 }
+
+// Função para remover um paciente da lista e do txt
 int Remover_paciente(Lista *l, const char *rg, ABB *arvi, ABB *arva, ABB* arvm, ABB *arvd){
     Elista *atual = l->inicio;
     while (atual != NULL) {
@@ -186,10 +205,8 @@ int Remover_paciente(Lista *l, const char *rg, ABB *arvi, ABB *arva, ABB* arvm, 
                    atual->dados->Entrada->dia,
                    atual->dados->Entrada->mes,
                    atual->dados->Entrada->ano);
-            printf("3");
             removeABBGeral(arvi, arva, arvm, arvd, atual->dados);
             removerLista(l, atual->dados);
-            printf("2");
             salvarRegistros(l);
             return 1;
         }
@@ -199,17 +216,21 @@ int Remover_paciente(Lista *l, const char *rg, ABB *arvi, ABB *arva, ABB* arvm, 
     return 0;
 }
 
-//-------------------------------Funções de manipulação de listas--------------------------------//
+//-------------------------------Fim das funções de manipulação de listas--------------------------------//
+
 
 
 //-------------------------------Funções de manipulação de filas--------------------------------//
 
+// Função para criar um nó de fila
 Efila *criaEfila(Registro *r){
     Efila *ef = (Efila *)malloc(sizeof(Efila));
     ef->dados = r;
     ef->proximo = NULL;
     return ef;
 }
+
+// Função para criar uma fila
 Fila *criaFila(){
     Fila *f = (Fila *)malloc(sizeof(Fila));
     f->head = NULL;
@@ -218,39 +239,37 @@ Fila *criaFila(){
     return f;
 }
 
- 
+// Função para enfileirar um paciente na fila
 void enqueueFila(Fila *fila, Lista *lista, const char *rg, Pilha *pilha) {
     Elista *atual = lista->inicio;
 
     // Percorre a lista para encontrar o paciente com o RG correspondente
     while (atual != NULL) {
         if (strcmp(atual->dados->rg, rg) == 0) {
-            // Paciente encontrado, agora cria o nó da fila com esse paciente
             Efila *paciente = criaEfila(atual->dados);
 
-            if (fila->head == NULL) {
-                // Se a fila está vazia, inicializa com o novo paciente
+            if (fila->head == NULL) {//fila vazia
                 fila->head = paciente;
                 fila->tail = paciente;
-            } else {
-                // Caso contrário, adiciona ao final da fila
+            } else { //fila não vaizia
                 fila->tail->proximo = paciente;
                 fila->tail = paciente;
             }
             fila->qtde++;
-            pushPilha(pilha, 1, paciente->dados);
+            pushPilha(pilha, 1, paciente->dados); // acresenta a operação na pilha de operações
             printf("Paciente com RG %s enfileirado com sucesso!\n", rg);
             return;
         }
         atual = atual->proximo;
     }
 
-    // Se o paciente não for encontrado na lista
+    // Paciente não encontrado
     printf("Paciente com RG %s não encontrado na lista.\n", rg);
 }
 
+// Função para desenfileirar um paciente da fila
 int dequeueFila(Fila *fila, Pilha *pilha){
-    if(fila->head == NULL){
+    if(fila->head == NULL){//fila vazia
         return 0;
     }
 
@@ -267,12 +286,14 @@ int dequeueFila(Fila *fila, Pilha *pilha){
 
 
     fila->head = fila->head->proximo;
-    pushPilha(pilha, 2, aux->dados);
+    pushPilha(pilha, 2, aux->dados);//encviando a informação de de dequeue para a pilha de operações
     free(aux);
     fila->qtde--;
 
     return 1;
 }
+
+// Função para mostrar todos os elementos da fila
 void showFila(Fila *fila){
     Efila *aux = fila->head;
     int posicao = 1;
@@ -289,51 +310,10 @@ void showFila(Fila *fila){
     }
 }
 
-void desfazer(Pilha *pilha, Fila *fila){
-    char opcao;
-    if(pilha->topo->op == 1){
-        printf("Deseja desfazer a insercao de %s na fila? (s/n): ", pilha->topo->reg->nome);
-        scanf("%c", &opcao);
-        getchar();
-        if(opcao == 's'){
-            Efila *aux = fila->head;
-            if(aux == fila->tail){
-                fila->head = NULL;
-                fila->tail = NULL;
-            } else {
-                Efila *ant = NULL;
-                while(aux->proximo != NULL){
-                    ant = aux;
-                    aux = aux->proximo;
-                }
-                fila->tail = ant;
-                ant->proximo = NULL;
-            }
-            free(aux);
-            popPilha(pilha);
-            fila->qtde--;
-            printf("Paciente removido da fila!\n\n");
-             
-        } else {
-            printf("Operacao cancelada!\n\n");
-        }
-    } else if(pilha->topo->op == 2){
-        char opcao;
-        printf("Deseja desfazer a remocao de %s na fila? (s/n): ", pilha->topo->reg->nome);
-        scanf("%c", &opcao);
-        getchar();
-        if(opcao == 's'){
-            Efila *aux = criaEfila(pilha->topo->reg);
-            aux->proximo = fila->head;
-            fila->head = aux;
-            fila->qtde++;
-            popPilha(pilha);
-            printf("Paciente reinserido na fila!\n\n");
-        } else{
-            printf("Operacao cancelada!\n\n");
-        }
-    }
-}
+
+
+//-------------------------------Funções de manipulação de filas--------------------------------//
+
 
 //-------------------------------Funções de manipulação de pilhass--------------------------------//
 
@@ -371,8 +351,59 @@ Registro *popPilha(Pilha *pilha){
     return reg;
 }
 
+// Função para desfazer a última operação realizada na fila
+void desfazer(Pilha *pilha, Fila *fila){
+    char opcao;
+    if(pilha->topo->op == 1){ // Operação de enfileirar
+        printf("Deseja desfazer a insercao de %s na fila? (s/n): ", pilha->topo->reg->nome);
+        scanf("%c", &opcao);
+        getchar();
+        if(opcao == 's'){
+            Efila *aux = fila->head;
+            if(aux == fila->tail){
+                fila->head = NULL;
+                fila->tail = NULL;
+            } else {
+                Efila *ant = NULL;
+                while(aux->proximo != NULL){
+                    ant = aux;
+                    aux = aux->proximo;
+                }
+                fila->tail = ant;
+                ant->proximo = NULL;
+            }
+            free(aux);
+            popPilha(pilha);
+            fila->qtde--;
+            printf("Paciente removido da fila!\n\n");
+             
+        } else {
+            printf("Operacao cancelada!\n\n");
+        }
+    } else if(pilha->topo->op == 2){ //operação de desinfileirar
+        char opcao;
+        printf("Deseja desfazer a remocao de %s na fila? (s/n): ", pilha->topo->reg->nome);
+        scanf("%c", &opcao);
+        getchar();
+        if(opcao == 's'){
+            Efila *aux = criaEfila(pilha->topo->reg);
+            aux->proximo = fila->head;
+            fila->head = aux;
+            fila->qtde++;
+            popPilha(pilha);
+            printf("Paciente reinserido na fila!\n\n");
+        } else{
+            printf("Operacao cancelada!\n\n");
+        }
+    }
+}
+
+//-------------------------------Funções de manipulação de pilhass--------------------------------//
+
+
 //-------------------------------Funções de manipulação de ABB--------------------------------//
 
+//Criação de uma ABB
 ABB *criaABB(){
     ABB *arvore = malloc(sizeof(ABB));
     arvore->raiz = NULL;
@@ -380,6 +411,7 @@ ABB *criaABB(){
     return arvore;
 }
 
+//CTotação de um né de ABB
 void rotacaoEsquerdaABB(ABB *arv, EABB *v){
     if(v==NULL || v->dir == NULL){
         return;
@@ -405,6 +437,8 @@ void rotacaoEsquerdaABB(ABB *arv, EABB *v){
     }
 
 }
+
+//Rotação para a direita
 void rotacaoDireitaABB(ABB *arv, EABB *v){
     if(v==NULL || v->esq == NULL){
         return;
@@ -430,22 +464,28 @@ void rotacaoDireitaABB(ABB *arv, EABB *v){
     }
 }
 
+//Função para calcular o maior entre dois números
 int maxABB(int x, int y){
     if (x >= y)
         return x;
     else
         return y;
 }
+
+//Função para calcular a altura da ABB
 int alturaABB(EABB *x){
     if (x == NULL) {
         return -1;
     }
     return maxABB(alturaABB(x->esq), alturaABB(x->dir)) + 1;
 }
+
+//Função para calcular o fator de balanceamento da ABB
 int fatorBalanceamentoABB(EABB *x){
     return alturaABB(x->dir) - alturaABB(x->esq); 
 }
 
+//Função para balancear a ABB
 void balanceieABB(ABB *arv, EABB *v){
     if(v == NULL){
         return;
@@ -473,6 +513,7 @@ void balanceieABB(ABB *arv, EABB *v){
     }
 }
 
+//Função para inserir um nó na ABB de idade
 int insereABBIdade(ABB *arv, Registro *reg){
     EABB *novo = malloc(sizeof(EABB));
     novo->dir = NULL;
@@ -512,6 +553,7 @@ int insereABBIdade(ABB *arv, Registro *reg){
     return 1;
 }
 
+//Função para inserir um nó na ABB de ano
 int insereABBAno(ABB *arv, Registro *reg){
     EABB *novo = malloc(sizeof(EABB));
     novo->dir = NULL;
@@ -551,6 +593,7 @@ int insereABBAno(ABB *arv, Registro *reg){
     return 1;
 }
 
+//Função para inserir um nó na ABB de mês
 int insereABBMes(ABB *arv, Registro *reg){
     EABB *novo = malloc(sizeof(EABB));
     novo->dir = NULL;
@@ -590,6 +633,7 @@ int insereABBMes(ABB *arv, Registro *reg){
     return 1;
 }
 
+//Função para inserir um nó na ABB de dia
 int insereABBDia(ABB *arv, Registro *reg){
     EABB *novo = malloc(sizeof(EABB));
     novo->dir = NULL;
@@ -629,6 +673,7 @@ int insereABBDia(ABB *arv, Registro *reg){
     return 1;
 }
 
+//Função para remover um nó da ABB
 int removerABB(ABB *arvore, EABB *x){
     int filhos = 0;
 
@@ -677,6 +722,8 @@ int removerABB(ABB *arvore, EABB *x){
 
     return 1;
 }
+
+//Função para buscar e remover um nó da ABB de idade
 int buscar_e_removerABBIdade(ABB *arvore, Registro *reg){
     EABB *atual = arvore->raiz;
     while (atual != NULL) {
@@ -692,6 +739,7 @@ int buscar_e_removerABBIdade(ABB *arvore, Registro *reg){
     return 0;
 }
 
+//Função para buscar e remover um nó da ABB de ano
 int buscar_e_removerABBAno(ABB *arvore, Registro *reg){
     EABB *atual = arvore->raiz;
     while (atual != NULL) {
@@ -707,6 +755,7 @@ int buscar_e_removerABBAno(ABB *arvore, Registro *reg){
     return 0;
 }
 
+//Função para buscar e remover um nó da ABB de mês
 int buscar_e_removerABBMes(ABB *arvore, Registro *reg){
     EABB *atual = arvore->raiz;
     while (atual != NULL) {
@@ -722,9 +771,9 @@ int buscar_e_removerABBMes(ABB *arvore, Registro *reg){
     return 0;
 }
 
+//Função para buscar e remover um nó da ABB de dia
 int buscar_e_removerABBDia(ABB *arvore, Registro *reg){
     EABB *atual = arvore->raiz;
-    imprimeDados(reg);
     while (atual != NULL) {
         if (strcmp(atual->dados->rg, reg->rg) == 0){
             return removerABB(arvore, atual);
@@ -739,6 +788,7 @@ int buscar_e_removerABBDia(ABB *arvore, Registro *reg){
     return 0;
 }
 
+//Função para imprimir os dados de um nó da ABB
 void imprimeInOrdemABB(EABB *raiz){
     if (raiz != NULL) {
     imprimeInOrdemABB(raiz->esq);
@@ -747,6 +797,7 @@ void imprimeInOrdemABB(EABB *raiz){
   }
 }
 
+//Função para inserir os dados em todas as ABBs
 void insereABBGeral(ABB *arvi,ABB *arva,ABB *arvm,ABB *arvd, Registro *reg){
     insereABBIdade(arvi,reg);
     insereABBAno(arva,reg);
@@ -754,8 +805,8 @@ void insereABBGeral(ABB *arvi,ABB *arva,ABB *arvm,ABB *arvd, Registro *reg){
     insereABBDia(arvd,reg);
 }
 
+//Função para remover os dados em todas as ABBs
 void removeABBGeral(ABB *arvi,ABB *arva,ABB *arvm,ABB *arvd, Registro *reg){
-    printf("1");
     buscar_e_removerABBIdade(arvi, reg);
     buscar_e_removerABBAno(arva, reg);
     buscar_e_removerABBMes(arvm, reg);
@@ -775,10 +826,6 @@ void imprimeDados(Registro *reg){
 }
 
 
-int Mostrar_por_ano(ABB *arv);
-int Mostrar_por_mes(ABB *arv);
-int Mostrar_por_dia(ABB *arv);
-int Mostrar_por_idade(ABB *arv);
 
 
 //--------------------------------------Funções de manipulação de arquivos--------------------------------------//
@@ -918,17 +965,21 @@ int carregarRegistros(Lista *l, ABB* arvIdade,ABB* arvAno,ABB* arvMes,ABB* arvDi
 //--------------------------------------Funções de manipulação de arquivos--------------------------------------//
 
 
-int menus(Lista *l, Fila *f, Pilha *p, ABB *arvi, ABB *arva, ABB *arvm, ABB *arvd) {
+//--------------------------------------Funções de Menus--------------------------------------//
+
+
+int menus(Lista *l, Fila *f, Pilha *p, ABB *arvi, ABB *arva, ABB *arvm, ABB *arvd) { //Menu principal que chama os outros menus
     int opcao;
     do {
         printf("Menu Principal:\n");
-        printf("1. Lista de Pacientes\n");
-        printf("2. Fila de espera\n");
-        printf("3. Buscar por caracteristicas\n");
+        printf("1. Lista de Pacientes\n"); //Menu de manipulação de listas
+        printf("2. Fila de espera\n");     //Menu de manipulação de filas
+        printf("3. Buscar por caracteristicas\n"); //Menu de manipulação de árvores
+        printf("4. Mostrar dados DEV's\n"); // Mostrar dados dos desenvolvedores
         printf("0. Sair\n");
         printf("Escolha uma opção: ");
         scanf("%d", &opcao);
-        getchar(); // Limpar o buffer do teclado
+        getchar(); 
 
         switch (opcao) {
             case 1:
@@ -940,6 +991,11 @@ int menus(Lista *l, Fila *f, Pilha *p, ABB *arvi, ABB *arva, ABB *arvm, ABB *arv
             case 3:
                 menuArvore(l, arvi, arva, arvm, arvd);
                 break;
+            case 4:
+                printf("\n");
+                Mostrar_dados_devs();
+                printf("\n");
+                break;
             case 0:
                 printf("Saindo...\n");
                 break;
@@ -950,7 +1006,7 @@ int menus(Lista *l, Fila *f, Pilha *p, ABB *arvi, ABB *arva, ABB *arvm, ABB *arv
     return 0;
 }
 
-void menuLista(Lista *l, ABB *arvIdade, ABB *arvAno, ABB *arvMes, ABB *arvDia) {
+void menuLista(Lista *l, ABB *arvIdade, ABB *arvAno, ABB *arvMes, ABB *arvDia) { // Menu de manipulação de listas
     int opcao;
     char rg[20];
     do {
@@ -963,7 +1019,7 @@ void menuLista(Lista *l, ABB *arvIdade, ABB *arvAno, ABB *arvMes, ABB *arvDia) {
         printf("0. Voltar ao menu principal\n");
         printf("Escolha uma opção: ");
         scanf("%d", &opcao);
-        getchar(); // Limpar o buffer do teclado
+        getchar(); 
 
         switch (opcao) {
             case 1: {
@@ -976,19 +1032,19 @@ void menuLista(Lista *l, ABB *arvIdade, ABB *arvAno, ABB *arvMes, ABB *arvDia) {
             case 2:
                 printf("\nDigite o RG do paciente: ");
                 scanf("%s", rg);
-                getchar(); // Limpar o buffer do teclado
+                getchar(); 
                 Consultar_paciente_cadastrado(l, rg);
                 break;
             case 3:
                 printf("\nDigite o RG do paciente: ");
                 scanf("%s", rg);
-                getchar(); // Limpar o buffer do teclado
+                getchar(); 
                 Atualizar_dados_de_paciente(l, rg, arvIdade,arvAno,arvMes,arvDia);
                 break;
             case 4:
                 printf("\nDigite o RG do paciente: ");
                 scanf("%s", rg);
-                getchar(); // Limpar o buffer do teclado
+                getchar(); 
                 Remover_paciente(l, rg, arvIdade,arvAno,arvMes,arvDia);
                 break;
             case 5:
@@ -1004,7 +1060,7 @@ void menuLista(Lista *l, ABB *arvIdade, ABB *arvAno, ABB *arvMes, ABB *arvDia) {
     } while (opcao != 0);
 }
 
-void menuFila(Lista *l, Fila *f, Pilha *pilha) {
+void menuFila(Lista *l, Fila *f, Pilha *pilha) { // Menu de manipulação de filas
     int opcao;
     char rg[20];
     do {
@@ -1016,13 +1072,13 @@ void menuFila(Lista *l, Fila *f, Pilha *pilha) {
         printf("0. Voltar ao menu principal\n");
         printf("Escolha uma opção: ");
         scanf("%d", &opcao);
-        getchar(); // Limpar o buffer do teclado
+        getchar(); 
 
         switch (opcao) {
             case 1:
                 printf("\nDigite o RG do paciente: ");
                 scanf("%s", rg);
-                getchar(); // Limpar o buffer do teclado
+                getchar(); 
                 enqueueFila(f, l, rg, pilha);
                 break;
             case 2:
@@ -1045,7 +1101,7 @@ void menuFila(Lista *l, Fila *f, Pilha *pilha) {
         }
     } while (opcao != 0);
 }
-void menuArvore(Lista *l, ABB *arvi, ABB *arva, ABB *arvm, ABB *arvd) {
+void menuArvore(Lista *l, ABB *arvi, ABB *arva, ABB *arvm, ABB *arvd) { // Menu de manipulação de árvores
     int opcao;
     do {
         printf("\nMenu de Manipulação de Árvore:\n");
@@ -1056,7 +1112,7 @@ void menuArvore(Lista *l, ABB *arvi, ABB *arva, ABB *arvm, ABB *arvd) {
         printf("0. Voltar ao menu principal\n");
         printf("Escolha uma opção: ");
         scanf("%d", &opcao);
-        getchar(); // Limpar o buffer do teclado
+        getchar(); 
 
         switch (opcao) {
             case 1:
@@ -1079,3 +1135,4 @@ void menuArvore(Lista *l, ABB *arvi, ABB *arva, ABB *arvm, ABB *arvd) {
         }
     } while (opcao != 0);
 }
+//--------------------------------------Funções de Menus--------------------------------------//

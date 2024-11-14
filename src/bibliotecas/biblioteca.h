@@ -1,70 +1,89 @@
 #ifndef biblioteca_h
 #define biblioteca_h    
 
-typedef struct {
+
+//----------------------------------------Definicão das estruturas----------------------------------//
+typedef struct {//Estrutura para armazenar a data de entrada do paciente
     int dia;
     int mes;
     int ano;
 }Data;
 
-typedef struct {
+typedef struct { //Estrutura para armazenar os dados do paciente
     char nome[100];
     int idade;
     char rg[10];
     Data *Entrada;
 }Registro;
 
-typedef struct Elista {
+typedef struct Elista { //Estrutura para armazenar um elemento da lista
     Registro *dados;
     struct Elista *proximo;
 } Elista;
 
-typedef struct Lista {
+typedef struct Lista { //Estrutura para armazenar a lista
     int qtde;
     Elista *inicio;
 } Lista;
 
-typedef struct Efila {
+typedef struct Efila { //Estrutura para armazenar um elemento da fila
     struct Efila *proximo;
     Registro *dados;
 } Efila;
 
-typedef struct {
+typedef struct { //Estrutura para armazenar a fila
     Efila *head;
     Efila *tail;
     int qtde;
 } Fila;
 
-typedef struct EABB {
+typedef struct EABB { //Estrutura para armazenar um elemento da ABB
   Registro *dados;
   struct EABB *esq;
   struct EABB *dir;
   struct EABB *pai;
 } EABB;
 
-typedef struct ABB {
+typedef struct ABB { //Estrutura para armazenar a ABB
   EABB *raiz;
   int qtde;
 } ABB;
 
-typedef struct Epilha {
+typedef struct Epilha { //Estrutura para armazenar um elemento da pilha
     struct Epilha *proximo;
     int op;
     Registro *reg;
 } Epilha;
 
-typedef struct {
+typedef struct { //Estrutura para armazenar a pilha
     Epilha *topo;
     int qtde;
 } Pilha;
+//----------------------------------------Definicão das estruturas----------------------------------//
+ 
+//-------------------------------Desenvolvedores--------------------------------//
 
+void Mostrar_dados_devs();
+
+//-------------------------------Desenvolvedores--------------------------------//
+
+
+//-------------------------------Funções de manipulação de listas--------------------------------//
 Lista *criaLista();
 Elista *criaElista(Registro *r);
 void inserirLista(Lista *l, Registro *r);
 void removerLista(Lista *l, Registro *r);
 void showLista(Lista *l);
 Registro *criaRegistro() ;
+Registro *criaRegistro();
+int Cadastrar_novo_paciente(Lista *l, Registro *novoRegistro);
+void Consultar_paciente_cadastrado(Lista *l, const char *rg);
+int Atualizar_dados_de_paciente(Lista *l, const char *rg, ABB *arvi, ABB *arva, ABB* arvm, ABB *arvd);
+int Remover_paciente(Lista *l, const char *rg, ABB *arvi, ABB *arva, ABB* arvm, ABB *arvd);
 
+//-------------------------------Funções de manipulação de listas--------------------------------//
+
+//-------------------------------Funções de manipulação de filas--------------------------------//
 
 Efila *criaEfila(Registro *r);
 Fila *criaFila();
@@ -72,12 +91,19 @@ void enqueueFila(Fila *fila, Lista *lista, const char *rg, Pilha *pilha);
 int dequeueFila(Fila *fila, Pilha *pilha);
 void showFila(Fila *fila);
 
+//-------------------------------Funções de manipulação de filas--------------------------------//
+
+//-------------------------------Funções de manipulação de pilhas--------------------------------//
+
 Epilha *criaEpilha(int op, Registro *reg);
 Pilha *criaPilha();
 void pushPilha(Pilha *pilha, int op, Registro *reg);
 Registro *popPilha(Pilha *pilha);
 void showPilha(Pilha *pilha);
 
+//-------------------------------Funções de manipulação de pilhas--------------------------------//
+
+//-------------------------------Funções de manipulação de árvores--------------------------------//
 ABB *criaABB();
 void rotacaoEsquerdaABB(ABB *arv, EABB *v);
 void rotacaoDireitaABB(ABB *arv, EABB *v);
@@ -99,32 +125,29 @@ void imprimeInOrdemABB(EABB *raiz);
 void insereABBGeral(ABB *arvi,ABB *arva,ABB *arvm,ABB *arvd, Registro *reg);
 void removeABBGeral(ABB *arvi,ABB *arva,ABB *arvm,ABB *arvd, Registro *reg);
 
-Registro *criaRegistro();
-int Cadastrar_novo_paciente(Lista *l, Registro *novoRegistro);
-void Consultar_paciente_cadastrado(Lista *l, const char *rg);
-int Atualizar_dados_de_paciente(Lista *l, const char *rg, ABB *arvi, ABB *arva, ABB* arvm, ABB *arvd);
-int Remover_paciente(Lista *l, const char *rg, ABB *arvi, ABB *arva, ABB* arvm, ABB *arvd);
+//-------------------------------Funções de manipulação de árvores--------------------------------//
+
+
 
 void imprimeDados(Registro *reg);
 
-int Mostrar_por_ano(ABB *arv);
-int Mostrar_por_mes(ABB *arv);
-int Mostrar_por_dia(ABB *arv);
-int Mostrar_por_idade(ABB *arv);
+//-------------------------------Funções de manipulação de arquivos--------------------------------//
 
 int salvarRegistros(Lista *l);
 int carregarRegistros(Lista *l, ABB*  arvIdade,ABB* arvAno,ABB* arvMes,ABB* arvDia);
 int salvarDatas(Lista *l);
 int carregarDatas(Lista *l, ABB*  arvIdade,ABB* arvAno,ABB* arvMes,ABB* arvDia);
 
+//-------------------------------Funções de manipulação de arquivos--------------------------------//
 
-void Mostrar_dados_devs();
-
+//-------------------------------Funções de Menus--------------------------------//
 int menus(Lista *l, Fila *f, Pilha *p, ABB *arvi, ABB *arva, ABB *arvm, ABB *arvd);
 void menuLista(Lista *l, ABB *arvIdade, ABB *arvAno, ABB *arvMes, ABB *arvDia);
 void menuFila(Lista *l, Fila *f, Pilha *p);
 void menuArvore(Lista *l, ABB *arvi, ABB *arva, ABB *arvm, ABB *arvd);
 
 void desfazer(Pilha *pilha, Fila *fila);
+
+//-------------------------------Funções de Menus--------------------------------//
 
 #endif
